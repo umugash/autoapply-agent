@@ -1,0 +1,69 @@
+{
+  "resumes": [
+    {
+      "id": "res_sde_amazon",
+      "filename": "Amazon - Software Development Engineer.pdf",
+      "filepath": "resumes/Amazon - Software Development Engineer.pdf",
+      "target_roles": [
+        "Software Development Engineer",
+        "Software Engineer",
+        "Full Stack Developer",
+        "Backend Engineer"
+      ],
+      "primary_skills": [
+        "Python",
+        "C++",
+        "JavaScript",
+        "TypeScript",
+        "Data Structures and Algorithms",
+        "Object-Oriented Programming",
+        "Problem Solving",
+        "Software Development",
+        "SQL",
+        "PostgreSQL",
+        "Database Management",
+        "React.js",
+        "Node.js",
+        "Express.js",
+        "Supabase",
+        "Git",
+        "GitHub",
+        "Machine Learning",
+        "Deep Learning",
+        "Computer Vision",
+        "Model Training",
+        "API Development",
+        "Application Deployment"
+      ],
+      "summary": "Computer Science student pursuing an Integrated M.Tech in CSE – Data Science at SRMIST, with a strong foundation in programming, data structures, algorithms, and software development. Experienced in building and deploying full-stack applications, including a production e-commerce platform supporting real-world retail operations. Skilled in Python, C++, TypeScript, SQL, and modern web technologies, with additional experience in machine learning and computer vision projects. Interested in developing reliable, scalable software solutions and applying problem-solving skills to real-world engineering challenges.",
+      "keywords": [
+        "python",
+        "c++",
+        "javascript",
+        "typescript",
+        "data structures and algorithms",
+        "object-oriented programming",
+        "problem solving",
+        "software development",
+        "sql",
+        "postgresql",
+        "database management",
+        "react.js",
+        "node.js",
+        "express.js",
+        "supabase",
+        "git",
+        "github",
+        "machine learning",
+        "deep learning",
+        "computer vision",
+        "model training",
+        "api development",
+        "application deployment",
+        "software development engineer",
+        "software engineer",
+        "sde"
+      ]
+    }
+  ]
+}

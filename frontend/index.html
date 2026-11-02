@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Antigravity AutoApply AI | Autonomous Career Application Agent</title>
+    <meta name="description" content="AI-powered autonomous job application agent with dynamic profile filling, multi-resume matching, real-time OTP/CAPTCHA human-in-the-loop assistance, and adaptive question learning.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <header class="app-header">
+        <div class="header-container">
+            <div class="logo-group">
+                <div class="logo-icon">
+                    <span class="logo-symbol">⚡</span>
+                </div>
+                <div class="logo-text">
+                    <h1>AutoApply <span class="gradient-text">AI Agent</span></h1>
+                    <span class="logo-tagline">Autonomous Multi-ATS Form Filler &amp; Resume Matcher</span>
+                </div>
+            </div>
+
+            <!-- Global Status Indicator -->
+            <div class="header-actions">
+                <div id="agent-status-badge" class="status-badge status-ready">
+                    <span class="status-dot"></span>
+                    <span id="agent-status-text">AGENT READY</span>
+                </div>
+                <button id="btn-global-start" class="btn btn-primary">
+                    <span class="btn-icon">▶</span> Run Next Job
+                </button>
+                <button id="btn-global-stop" class="btn btn-danger btn-outline" style="display: none;">
+                    <span class="btn-icon">⏹</span> Stop Agent
+                </button>
+            </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <nav class="nav-tabs">
+            <div class="nav-container">
+                <button id="tab-btn-apply" class="tab-btn active" data-tab="tab-apply">
+                    <span class="tab-icon">🚀</span> Live Apply &amp; Queue
+                </button>
+                <button id="tab-btn-profile" class="tab-btn" data-tab="tab-profile">
+                    <span class="tab-icon">👤</span> My Profile &amp; Knowledge
+                </button>
+                <button id="tab-btn-resumes" class="tab-btn" data-tab="tab-resumes">
+                    <span class="tab-icon">📄</span> Resume Matcher Hub
+                </button>
+                <button id="tab-btn-memory" class="tab-btn" data-tab="tab-memory">
+                    <span class="tab-icon">🧠</span> Learned Memory (Q&amp;A)
+                </button>
+                <button id="tab-btn-logs" class="tab-btn" data-tab="tab-logs">
+                    <span class="tab-icon">📊</span> Activity Audit
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Container -->
+    <main class="main-content">
+        <!-- Floating Intervention Banner (Shown when OTP, CAPTCHA, or Unknown Question occurs) -->
+        <div id="intervention-banner" class="intervention-banner" style="display: none;">
+            <div class="intervention-content">
+                <div class="intervention-icon">⚠️</div>
+                <div class="intervention-details">
+                    <h3 id="intervention-title">Human Intervention Required</h3>
+                    <p id="intervention-desc">The official job portal is asking for verification or an unhandled question.</p>
+                </div>
+                <div class="intervention-actions">
+                    <button id="btn-intervention-resume" class="btn btn-success">
+                        ✅ I've Completed It (Resume Agent)
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= TAB 1: LIVE APPLY & QUEUE ================= -->
+        <section id="tab-apply" class="tab-panel active">
+            <div class="grid-layout-2col">
+                <!-- Left: Add Job Links & Settings -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>📥 Job Application Queue</h2>
+                        <span class="badge badge-accent">Batch Support</span>
+                    </div>
+                    <div class="card-body">
+                        <label for="input-job-links" class="field-label">
+                            Paste Job Application URLs <span class="field-hint">(One link per line — Greenhouse, Lever, Workday, Ashby, official company portals)</span>
+                        </label>
+                        <textarea id="input-job-links" class="input-textarea" rows="4" placeholder="https://boards.greenhouse.io/company/jobs/12345&#10;https://jobs.lever.co/company/abcdef&#10;https://company.wd1.myworkdayjobs.com/en-US/Careers/job/..."></textarea>
+                        
+                        <div class="form-row mt-3">
+                            <div class="toggle-group">
+                                <label class="switch">
+                                    <input type="checkbox" id="toggle-auto-submit">
+                                    <span class="slider round"></span>
+                                </label>
+                                <span class="toggle-label">Auto-Submit (If off, agent stops at Review screen for your sign-off)</span>
+                            </div>
+                        </div>
+
+                        <div class="btn-group mt-4">
+                            <button id="btn-add-links" class="btn btn-primary">
+                                <span class="btn-icon">➕</span> Add to Queue
+                            </button>
+                            <button id="btn-fill-sample-links" class="btn btn-secondary">
+                                Fill Sample Links
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Active Session Telemetry & Step Tracker -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>📡 Live Agent Telemetry</h2>
+                        <span id="telemetry-step-badge" class="badge badge-subtle">IDLE</span>
+                    </div>
+                    <div class="card-body">
+                        <!-- Step Progress Tracker -->
+                        <div class="stepper-container">
+                            <div class="step-item" id="step-navigating">
+                                <div class="step-circle">1</div>
+                                <div class="step-label">Navigate</div>
+                            </div>
+                            <div class="step-connector"></div>
+                            <div class="step-item" id="step-analyzing">
+                                <div class="step-circle">2</div>
+                                <div class="step-label">JD Analysis</div>
+                            </div>
+                            <div class="step-connector"></div>
+                            <div class="step-item" id="step-matching">
+                                <div class="step-circle">3</div>
+                                <div class="step-label">Resume Match</div>
+                            </div>
+                            <div class="step-connector"></div>
+                            <div class="step-item" id="step-filling">
+                                <div class="step-circle">4</div>
+                                <div class="step-label">Auto-Fill</div>
+                            </div>
+                            <div class="step-connector"></div>
+                            <div class="step-item" id="step-review">
+                                <div class="step-circle">5</div>
+                                <div class="step-label">Review / Submit</div>
+                            </div>
+                        </div>
+
+                        <!-- Real-time Console Log Stream -->
+                        <div class="live-console mt-4">
+                            <div class="console-header">
+                                <span>Agent Event Stream</span>
+                                <button id="btn-clear-logs" class="btn-text">Clear</button>
+                            </div>
+                            <div id="console-stream" class="console-body">
+                                <div class="log-entry info">[System] Antigravity AutoApply Agent initialized. Ready to process links.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Job Queue Table -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h2>📋 Queued Job Applications (<span id="queue-count">0</span>)</h2>
+                    <div class="header-tools">
+                        <button id="btn-refresh-queue" class="btn btn-sm btn-secondary">↻ Refresh</button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table" id="table-queue">
+                        <thead>
+                            <tr>
+                                <th>Target URL &amp; Role</th>
+                                <th>Matched Resume</th>
+                                <th>Match Score</th>
+                                <th>Status</th>
+                                <th>Last Updated</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="queue-table-body">
+                            <!-- Populated dynamically via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 2: MY PROFILE & KNOWLEDGE ================= -->
+        <section id="tab-profile" class="tab-panel">
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <h2>👤 Candidate Profile &amp; Knowledge Base</h2>
+                        <p class="card-subtext">The agent references this information to automatically fill official application forms.</p>
+                    </div>
+                    <button id="btn-save-profile" class="btn btn-primary">
+                        💾 Save Profile
+                    </button>
+                </div>
+                <div class="card-body">
+                    <!-- Personal Info -->
+                    <h3 class="section-divider">Contact &amp; Personal Details</h3>
+                    <div class="form-grid-3">
+                        <div class="form-group">
+                            <label for="prof-first-name" class="field-label">First Name</label>
+                            <input type="text" id="prof-first-name" class="input-text">
+                        </div>
+                        <div class="form-group">
+                            <label for="prof-last-name" class="field-label">Last Name</label>
+                            <input type="text" id="prof-last-name" class="input-text">
+                        </div>
+                        <div class="form-group">
+                            <label for="prof-email" class="field-label">Email Address</label>
+                            <input type="email" id="prof-email" class="input-text">
+                        </div>
+                        <div class="form-group">
+                            <label for="prof-phone" class="field-label">Phone Number</label>
+                            <input type="text" id="prof-phone" class="input-text">
+                        </div>
+                        <div class="form-group">
+                            <label for="prof-city" class="field-label">City</label>
+                            <input type="text" id="prof-city" class="input-text">
+                        </div>
+                        <div class="form-group">
+                            <label for="prof-state" class="field-label">State / Region</label>
+                            <input type="text" id="prof-state" class="input-text">
+                        </div>
+                        <div class="form-group">
+                            <label for="prof-postal" class="field-label">Postal / ZIP Code</label>
+                            <input type="text" id="prof-postal" class="input-text">
+                        </div>
+                        <div class="form-group">
+                            <label for="prof-country" class="field-label">Country</label>
+                            <input type="text" id="prof-country" class="input-text">
+                        </div>
+                    </div>
+
+                    <!-- Online Links -->
+                    <h3 class="section-divider mt-4">Professional Profiles &amp; Portfolios</h3>
+                    <div class="form-grid-3">
+                        <div class="form-group">
+                            <label for="prof-linkedin" class="field-label">LinkedIn URL</label>
+                            <input type="url" id="prof-linkedin" class="input-text">
+                        </div>
+                        <div class="form-group">
+                            <label for="prof-github" class="field-label">GitHub URL</label>
+                            <input type="url" id="prof-github" class="input-text">
+                        </div>
+                        <div class="form-group">
+                            <label for="prof-portfolio" class="field-label">Portfolio / Personal Website</label>
+                            <input type="url" id="prof-portfolio" class="input-text">
+                        </div>
+                    </div>
+
+                    <!-- Work Authorization & Legal -->
+                    <h3 class="section-divider mt-4">Work Authorization &amp; Preferences</h3>
+                    <div class="form-grid-3">
+                        <div class="form-group">
+                            <label for="prof-work-auth" class="field-label">Legally Authorized in US?</label>
+                            <select id="prof-work-auth" class="input-select">
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="prof-sponsorship" class="field-label">Require Visa Sponsorship?</label>
+                            <select id="prof-sponsorship" class="input-select">
+                                <option value="No">No</option>
+                                <option value="Yes">Yes</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="prof-notice" class="field-label">Notice Period</label>
+                            <input type="text" id="prof-notice" class="input-text">
+                        </div>
+                        <div class="form-group">
+                            <label for="prof-salary" class="field-label">Desired Salary</label>
+                            <input type="text" id="prof-salary" class="input-text">
+                        </div>
+                        <div class="form-group">
+                            <label for="prof-relocate" class="field-label">Willing to Relocate?</label>
+                            <select id="prof-relocate" class="input-select">
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Skills -->
+                    <h3 class="section-divider mt-4">Skills Tag Pool</h3>
+                    <div class="form-group">
+                        <label for="prof-skills" class="field-label">Skills (Comma-separated)</label>
+                        <input type="text" id="prof-skills" class="input-text">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 3: RESUME MATCHER HUB ================= -->
+        <section id="tab-resumes" class="tab-panel">
+            <div class="grid-layout-2col">
+                <!-- Available Resumes -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>📁 Multi-Resume Portfolio</h2>
+                        <button id="btn-show-upload-resume" class="btn btn-sm btn-primary">
+                            + Upload Resume
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div id="resumes-list" class="resumes-grid">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Matching Sandbox -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>🎯 Interactive Resume Matcher Sandbox</h2>
+                        <span class="badge badge-accent">AI Evaluator</span>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-subtext">Test how the agent analyzes a job description and selects the winning resume.</p>
+                        
+                        <div class="form-group">
+                            <label for="sandbox-job-title" class="field-label">Job Title</label>
+                            <input type="text" id="sandbox-job-title" class="input-text" placeholder="e.g. Senior Machine Learning Engineer">
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <label for="sandbox-job-desc" class="field-label">Job Description / Requirements</label>
+                            <textarea id="sandbox-job-desc" class="input-textarea" rows="4" placeholder="Paste requirements, tech stack (e.g. PyTorch, LLMs, FastAPI, Python, RAG architectures)..."></textarea>
+                        </div>
+
+                        <button id="btn-test-match" class="btn btn-primary mt-3">
+                            ⚡ Evaluate Best Resume
+                        </button>
+
+                        <div id="sandbox-result" class="match-result-box mt-4" style="display: none;">
+                            <div class="match-score-header">
+                                <div class="match-badge" id="sandbox-score-badge">94% MATCH</div>
+                                <div class="match-winner-name" id="sandbox-winner-name">Alex_Morgan_AI_ML_Engineer.pdf</div>
+                            </div>
+                            <p id="sandbox-reason" class="match-reason-text mt-2"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 4: LEARNED MEMORY (Q&A) ================= -->
+        <section id="tab-memory" class="tab-panel">
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <h2>🧠 Dynamic Learned Memory</h2>
+                        <p class="card-subtext">Questions asked during applications are automatically retained here so the agent never asks them twice.</p>
+                    </div>
+                    <button id="btn-add-qa-modal" class="btn btn-primary">
+                        + Add Custom Q&amp;A
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="data-table" id="table-memory">
+                            <thead>
+                                <tr>
+                                    <th>Question / Match Patterns</th>
+                                    <th>Stored Answer</th>
+                                    <th>Category</th>
+                                    <th>Confidence</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="memory-table-body">
+                                <!-- Populated dynamically via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 5: AUDIT LOGS ================= -->
+        <section id="tab-logs" class="tab-panel">
+            <div class="card">
+                <div class="card-header">
+                    <h2>📊 Full Activity Audit Trail</h2>
+                </div>
+                <div class="card-body">
+                    <div class="audit-log-container" id="audit-log-container">
+                        <!-- Populated dynamically via JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal: Dynamic Question Prompt (Human Intervention) -->
+    <div id="modal-question" class="modal-overlay" style="display: none;">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>❓ New Application Question Detected</h3>
+                <span class="badge badge-accent">Agent Learning</span>
+            </div>
+            <div class="modal-body">
+                <p id="modal-q-text" class="question-highlight">"Why do you want to join our engineering team?"</p>
+                <div class="form-group mt-3">
+                    <label for="modal-q-answer" class="field-label">Your Answer (Will be saved for future applications)</label>
+                    <textarea id="modal-q-answer" class="input-textarea" rows="3" placeholder="Type your answer here..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btn-submit-answer" class="btn btn-primary">
+                    💾 Save Answer &amp; Continue Application
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Add Resume -->
+    <div id="modal-upload-resume" class="modal-overlay" style="display: none;">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>📄 Upload Resume Profile</h3>
+                <button id="btn-close-resume-modal" class="btn-text">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="upload-resume-file" class="field-label">Resume File (PDF / DOCX)</label>
+                    <input type="file" id="upload-resume-file" class="input-file" accept=".pdf,.docx">
+                </div>
+                <div class="form-group mt-3">
+                    <label for="upload-target-roles" class="field-label">Target Roles (Comma-separated)</label>
+                    <input type="text" id="upload-target-roles" class="input-text" placeholder="e.g. Backend Engineer, Systems Engineer">
+                </div>
+                <div class="form-group mt-3">
+                    <label for="upload-primary-skills" class="field-label">Key Skills (Comma-separated)</label>
+                    <input type="text" id="upload-primary-skills" class="input-text" placeholder="e.g. Python, FastAPI, Docker, PostgreSQL">
+                </div>
+                <div class="form-group mt-3">
+                    <label for="upload-summary" class="field-label">Profile Summary</label>
+                    <textarea id="upload-summary" class="input-textarea" rows="2" placeholder="Brief summary of experience focus..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btn-submit-upload-resume" class="btn btn-primary">
+                    Save Resume
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Element -->
+    <div id="toast-notification" class="toast"></div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
