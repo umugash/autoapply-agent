@@ -115,29 +115,34 @@ class AgentRunner:
         self.browser.resume()
 
     async def run_next_in_queue(self, auto_submit: bool = False):
-        """Executes the next pending job in the queue."""
+        """Processes all pending jobs in the queue sequentially."""
         if self.is_running:
             return
         self.is_running = True
-        queue = self.load_queue()
-        pending_jobs = [j for j in queue if j.get("status") in ["pending", "interrupted"]]
-
-        if not pending_jobs:
-            self.is_running = False
-            await self.emit("queue_empty", {"message": "No pending jobs in queue."})
-            return
-
-        target_job = pending_jobs[0]
-        self.current_job_id = target_job["id"]
 
         try:
-            await self.process_single_job(target_job, auto_submit=auto_submit)
-        except Exception as e:
-            print(f"[Runner] Error running job {target_job['id']}: {e}")
-            target_job["status"] = "failed"
-            target_job["notes"] = f"Error: {str(e)}"
-            self.save_queue(queue)
-            await self.emit("job_failed", {"job_id": target_job["id"], "error": str(e)})
+            while self.is_running:
+                queue = self.load_queue()
+                pending_jobs = [j for j in queue if j.get("status") in ["pending", "interrupted"]]
+
+                if not pending_jobs:
+                    await self.emit("queue_empty", {"message": "All jobs in queue have been processed."})
+                    break
+
+                target_job = pending_jobs[0]
+                self.current_job_id = target_job["id"]
+
+                try:
+                    await self.process_single_job(target_job, auto_submit=auto_submit)
+                except Exception as e:
+                    print(f"[Runner] Error running job {target_job['id']}: {e}")
+                    target_job["status"] = "failed"
+                    target_job["notes"] = f"Error: {str(e)}"
+                    self.save_queue(queue)
+                    await self.emit("job_failed", {"job_id": target_job["id"], "error": str(e)})
+
+                # Allow brief pause between job applications
+                await asyncio.sleep(2)
         finally:
             self.is_running = False
             self.current_job_id = None

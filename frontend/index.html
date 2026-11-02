@@ -32,7 +32,10 @@
                     <span id="agent-status-text">AGENT READY</span>
                 </div>
                 <button id="btn-global-start" class="btn btn-primary">
-                    <span class="btn-icon">▶</span> Run Next Job
+                    <span class="btn-icon">⚡</span> Run Full Automation
+                </button>
+                <button id="btn-open-local" class="btn btn-secondary" onclick="window.open('http://127.0.0.1:8000', '_blank')" title="Switch to local Playwright desktop agent">
+                    <span class="btn-icon">🖥️</span> Local Agent (8000)
                 </button>
                 <button id="btn-global-stop" class="btn btn-danger btn-outline" style="display: none;">
                     <span class="btn-icon">⏹</span> Stop Agent
@@ -105,9 +108,15 @@
                             </div>
                         </div>
 
-                        <div class="btn-group mt-4">
+                        <div class="btn-group mt-4" style="flex-wrap: wrap; gap: 8px;">
                             <button id="btn-add-links" class="btn btn-primary">
                                 <span class="btn-icon">➕</span> Add to Queue
+                            </button>
+                            <button id="btn-run-queue-direct" class="btn btn-accent" style="background: linear-gradient(135deg, #00f0ff, #7000ff); color: #fff; font-weight: 600;">
+                                <span class="btn-icon">🚀</span> Auto-Open &amp; Fill Links
+                            </button>
+                            <button id="btn-copy-autofill-script" class="btn btn-secondary" title="Copy 1-Click Form Filler Script">
+                                <span class="btn-icon">📋</span> Copy AutoFill Script
                             </button>
                             <button id="btn-fill-sample-links" class="btn btn-secondary">
                                 Fill Sample Links
