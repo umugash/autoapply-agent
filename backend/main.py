@@ -115,6 +115,14 @@ async def upload_resume(
     )
     return {"status": "success", "resume": new_res}
 
+@app.delete("/api/resumes/{resume_id}")
+def delete_resume(resume_id: str):
+    matcher.load()
+    success = matcher.delete_resume(resume_id)
+    if success:
+        return {"status": "success"}
+    raise HTTPException(status_code=404, detail="Resume ID not found")
+
 @app.post("/api/matcher/test")
 def test_matcher(body: MatcherTestInput):
     res = matcher.match(body.job_title, body.job_description)

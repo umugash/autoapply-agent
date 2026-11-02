@@ -1,0 +1,71 @@
+{
+  "questions": [
+    {
+      "id": "q_auth_us",
+      "patterns": [
+        "are you legally authorized to work in the united states",
+        "authorized to work in the us",
+        "legal right to work in the us",
+        "are you authorized to work in us"
+      ],
+      "answer": "Yes",
+      "type": "boolean",
+      "category": "legal",
+      "confidence": 1.0,
+      "last_used": "2026-11-01"
+    },
+    {
+      "id": "q_relocation",
+      "patterns": [
+        "are you willing to relocate",
+        "willing to relocate",
+        "open to relocation"
+      ],
+      "answer": "Yes",
+      "type": "boolean",
+      "category": "location",
+      "confidence": 0.9,
+      "last_used": "2026-11-01"
+    },
+    {
+      "id": "q_referral_source",
+      "patterns": [
+        "how did you hear about this position",
+        "how did you hear about us",
+        "source of application",
+        "where did you find this job"
+      ],
+      "answer": "LinkedIn",
+      "type": "text",
+      "category": "general",
+      "confidence": 0.9,
+      "last_used": "2026-11-01"
+    },
+    {
+      "id": "q_age_18",
+      "patterns": [
+        "are you 18 years of age or older",
+        "are you at least 18 years old",
+        "over 18"
+      ],
+      "answer": "Yes",
+      "type": "boolean",
+      "category": "legal",
+      "confidence": 1.0,
+      "last_used": "2026-11-01"
+    },
+    {
+      "id": "q_remote_work",
+      "patterns": [
+        "are you comfortable working remotely",
+        "experience working in remote environment",
+        "remote work comfort"
+      ],
+      "answer": "Yes",
+      "type": "boolean",
+      "category": "preferences",
+      "confidence": 1.0,
+      "last_used": "2026-11-01"
+    }
+  ]
+}

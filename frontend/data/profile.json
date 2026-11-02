@@ -1,0 +1,81 @@
+{
+  "personal": {
+    "first_name": "Mugash Priyan",
+    "last_name": "U",
+    "full_name": "Mugash Priyan U",
+    "email": "umugash07@gmail.com",
+    "phone": "+91 9933209738",
+    "address": "123 Tech Lane",
+    "city": "Chennai",
+    "state": "Tamil Nadu",
+    "postal_code": "603202",
+    "country": "India"
+  },
+  "links": {
+    "linkedin": "https://www.linkedin.com/in/mugash-priyan-u-44b4a1259/",
+    "github": "https://github.com/umugash",
+    "portfolio": ""
+  },
+  "work_authorization": {
+    "legally_authorized_us": "Yes",
+    "require_sponsorship_now_or_future": "No",
+    "visa_status": "Citizen / Permanent Resident",
+    "eu_work_permit": "No",
+    "can_relocate": "Yes",
+    "remote_preference": "Remote or Hybrid"
+  },
+  "preferences": {
+    "current_salary": "$135,000",
+    "desired_salary": "",
+    "currency": "USD",
+    "notice_period": "",
+    "earliest_start_date": "Immediate",
+    "preferred_role_levels": [
+      "Mid-Level",
+      "Senior"
+    ],
+    "employment_type": "Full-Time"
+  },
+  "education": [
+    {
+      "degree": "Bachelor of Science",
+      "field_of_study": "Computer Science",
+      "institution": "University of California, Berkeley",
+      "start_year": "2018",
+      "end_year": "2022",
+      "gpa": "3.8 / 4.0"
+    }
+  ],
+  "experience": [
+    {
+      "company": "Apex Cloud Systems",
+      "title": "Software Engineer II",
+      "location": "San Francisco, CA",
+      "start_date": "06/2022",
+      "end_date": "Present",
+      "current": true,
+      "description": "Architected high-throughput microservices using Python FastAPI and Go. Built scalable event streaming pipelines handling 50M+ events/day. Mentored junior engineers and boosted CI/CD deployment speed by 40%."
+    },
+    {
+      "company": "NextGen AI Labs",
+      "title": "Software Engineering Intern",
+      "location": "San Jose, CA",
+      "start_date": "05/2021",
+      "end_date": "08/2021",
+      "current": false,
+      "description": "Implemented automated data processing pipelines for NLP training datasets. Integrated computer vision inference models into a real-time web dashboard using PyTorch and React."
+    }
+  ],
+  "skills": [],
+  "demographics": {
+    "gender": "Decline to self-identify",
+    "race_ethnicity": "Decline to self-identify",
+    "veteran_status": "I am not a protected veteran",
+    "disability_status": "No, I do not have a disability"
+  },
+  "general_answers": {
+    "how_did_you_hear": "Company Careers Page / LinkedIn",
+    "why_join": "I am passionate about building scalable, high-impact software products with an innovative engineering team.",
+    "greatest_achievement": "Led the overhaul of our core data ingestion service, reducing latency by 65% and saving $40,000 in monthly AWS infrastructure costs."
+  }
+}

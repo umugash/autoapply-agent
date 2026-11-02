@@ -149,3 +149,25 @@ class ResumeMatcher:
         self.resumes.append(new_resume)
         self.save()
         return new_resume
+
+    def delete_resume(self, resume_id: str) -> bool:
+        """Removes a resume by id and cleans up the file if possible."""
+        initial_count = len(self.resumes)
+        target = next((r for r in self.resumes if r.get("id") == resume_id), None)
+        if not target:
+            return False
+
+        # Attempt to remove underlying file if it exists
+        filename = target.get("filename")
+        if filename:
+            file_path = self.resumes_dir / filename
+            if file_path.exists():
+                try:
+                    file_path.unlink()
+                except Exception as e:
+                    print(f"[Matcher] Error deleting file {file_path}: {e}")
+
+        self.resumes = [r for r in self.resumes if r.get("id") != resume_id]
+        self.save()
+        return len(self.resumes) < initial_count
+
