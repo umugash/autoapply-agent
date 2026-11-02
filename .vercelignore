@@ -1,0 +1,6 @@
+backend/
+requirements.txt
+run.py
+start.bat
+venv/
+.venv/
